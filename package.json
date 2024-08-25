@@ -1,0 +1,19 @@
+{
+  "name": "sulaiman-ndlovu-222-memory-game-in-vanilla-js-javascript",
+  "version": "1.0.0",
+  "description": "Memory game web app (222) For raw project instructions see: http://syllabus.africacode.net/projects/memory-game/part-1/",
+  "main": "src/memory_game.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Sulaiman Ndlovu",
+    "email": "sulaiman.ndlovu@umuzi.org",
+    "github": "sulaiman001221"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine": "^5.2.0"
+  }
+}
