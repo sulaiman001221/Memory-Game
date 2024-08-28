@@ -16,13 +16,13 @@ describe("Memory Game", function () {
   });
 
   it("should create the correct number of cards", function () {
-    expect(cards.length).toBe(16); // 8 pairs
+    expect(cards.length).toBe(16); 
   });
 
   it("should shuffle cards", function () {
     const symbols = Array.from(cards).map((card) => card.dataset.symbol);
     const sortedSymbols = [...symbols].sort();
-    expect(symbols).not.toEqual(sortedSymbols); // Expect that the cards are shuffled
+    expect(symbols).not.toEqual(sortedSymbols); 
   });
 
   it("should flip a card when clicked", function () {
@@ -73,7 +73,7 @@ describe("Memory Game", function () {
     card2.click();
 
     card1.click();
-    expect(card1.textContent).toBe(card1.dataset.symbol); // Card remains matched
+    expect(card1.textContent).toBe(card1.dataset.symbol);
   });
 
   it("should show alert when all pairs are matched", function (done) {
@@ -93,7 +93,7 @@ describe("Memory Game", function () {
     card.click();
     restartButton.click();
 
-    expect(gameBoard.children.length).toBe(16); // Check if the game board is recreated
-    expect(cards[0].classList.contains("hidden")).toBe(true); // Cards should be hidden again
+    expect(gameBoard.children.length).toBe(16); 
+    expect(cards[0].classList.contains("hidden")).toBe(true);
   });
 });
