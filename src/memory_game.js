@@ -84,4 +84,10 @@ const setupDom = (document) => {
   createBoard();
 };
 
+if (typeof document === undefined) {
+  document.addEventListener("DOMContentLoaded", () => {
+    setupDom(document);
+  });
+}
+
 module.exports = { setupDom };
