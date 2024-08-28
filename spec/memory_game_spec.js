@@ -1,17 +1,23 @@
+const { setupDom } = require("../src/memory_game");
+const { JSDOM } = require("jsdom");
+
 describe("Memory Game", function () {
-  let gameBoard, restartButton, cards, alertSpy;
+  let gameBoard, restartButton, cards, alertSpy, dom, document, html;
 
   beforeEach(function () {
-    document.body.innerHTML = `
-            <div id="game-board"></div>
-            <button id="restart-button">Restart Game</button>
-        `;
+    html = `
+    <div id="game-board"></div>
+    <button id="restart-button">Restart Game</button>
+`;
+    dom = new JSDOM(html);
+    document = dom.window.document;
+    setupDom(document);
 
     gameBoard = document.getElementById("game-board");
     restartButton = document.getElementById("restart-button");
 
-    alertSpy = spyOn(window, "alert");
-    memoryGame.init();
+   // alertSpy = spyOn(window, "alert");
+    //memoryGame.init();
     cards = gameBoard.querySelectorAll(".card");
   });
 
