@@ -15,5 +15,8 @@
   "license": "ISC",
   "devDependencies": {
     "jasmine": "^5.2.0"
+  },
+  "dependencies": {
+    "jsdom": "^25.0.0"
   }
 }
