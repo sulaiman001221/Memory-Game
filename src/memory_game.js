@@ -13,7 +13,7 @@ const setupDom = (document) => {
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-  }
+  } 
 
   function createBoard() {
     const cardSymbols = shuffle([...symbols, ...symbols]);
@@ -84,10 +84,8 @@ const setupDom = (document) => {
   createBoard();
 };
 
-if (typeof document === undefined) {
-  document.addEventListener("DOMContentLoaded", () => {
-    setupDom(document);
-  });
-}
+document.addEventListener("DOMContentLoaded", () => {
+  setupDom(document);
+});
 
 module.exports = { setupDom };
