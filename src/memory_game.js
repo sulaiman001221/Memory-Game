@@ -1,5 +1,7 @@
 const setupDom = (document) => {
   const symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
+  const winPopupMessage = document.getElementById("win-popup-message");
+  const container = document.getElementsByClassName("container")[0];
   let gameBoard = document.getElementById("game-board");
   let restartButton = document.getElementById("restart-button");
   let cards = [];
@@ -13,13 +15,13 @@ const setupDom = (document) => {
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-  } 
+  }
 
   function createBoard() {
     const cardSymbols = shuffle([...symbols, ...symbols]);
     cardSymbols.forEach((symbol) => {
       let card = document.createElement("div");
-      card.classList.add("card", "hidden");
+      card.classList.add("hidden", "card");
       card.dataset.symbol = symbol;
       card.addEventListener("click", () => flipCard(card));
       gameBoard.appendChild(card);
@@ -52,7 +54,9 @@ const setupDom = (document) => {
       secondCard.classList.add("matched");
       matchedPairs += 1;
       if (matchedPairs === symbols.length) {
-        setTimeout(() => alert("You won!"), 300);
+        setTimeout(() => {
+          displayWinMessage();
+        }, 1000);
       }
       resetFlippedCards();
     } else {
@@ -64,6 +68,12 @@ const setupDom = (document) => {
         resetFlippedCards();
       }, 1000);
     }
+  }
+
+  function displayWinMessage() {
+    winPopupMessage.style.display = "block";
+    restartButton.style.display = "none";
+    container.classList.add("dimmed-container");
   }
 
   function resetFlippedCards() {
@@ -82,10 +92,19 @@ const setupDom = (document) => {
 
   restartButton.addEventListener("click", restartGame);
   createBoard();
+
+  document.getElementById("play-again-button").addEventListener("click", () => {
+    restartGame();
+    winPopupMessage.style.display = "none";
+    container.classList.remove("dimmed-container");
+    restartButton.style.display = "block";
+  });
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  setupDom(document);
-});
+if (typeof document !== "undefined") {
+  document.addEventListener("DOMContentLoaded", () => {
+    setupDom(document);
+  });
+}
 
 module.exports = { setupDom };

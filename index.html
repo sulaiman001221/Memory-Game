@@ -7,14 +7,28 @@
     <link rel="stylesheet" href="styles.css" />
     <style>
       body {
-        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        font-family: "Concert One", "Coda", san-serif, cursive;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         height: 100vh;
         margin: 0;
-        background-color: #36454f;
+        background: linear-gradient(
+          135deg,
+          rgba(207, 197, 229, 1) 0%,
+          rgba(163, 154, 204, 1) 36%,
+          rgba(79, 71, 169, 1) 100%
+        );
+      }
+
+      .dimmed-container {
+        filter: brightness(35%);
       }
 
       #game-board {
@@ -24,17 +38,26 @@
         margin-bottom: 20px;
       }
 
+      .hidden {
+        background: linear-gradient(
+          to bottom,
+          rgba(69, 72, 77, 1) 0%,
+          rgba(0, 0, 0, 1) 100%
+        );
+      }
+
       .card {
         width: 100px;
         height: 100px;
-        background-color: #e1f5fe;
-        border: 2px solid #333;
+        background-color: #fff;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 8px;
         font-size: 24px;
         cursor: pointer;
         user-select: none;
+        margin-bottom: 10px;
       }
 
       .card.matched {
@@ -42,26 +65,46 @@
         cursor: default;
       }
 
-      .hidden {
-        background-color: #121212;
-      }
-
       button {
         width: 150px;
-        padding: 13px;
+        padding: 10px;
         border: 2px solid #333;
         border-radius: 15px;
-        background-color: #121212;
+        background: linear-gradient(
+          to bottom,
+          rgba(69, 72, 77, 1) 0%,
+          rgba(0, 0, 0, 1) 100%
+        );
+        border-radius: 8px;
         cursor: pointer;
         color: #fff;
-        font-family: monospace, sans-serif;
+        font-family: "Concert One", "Coda", san-serif, cursive;
         font-size: 16px;
+      }
+
+      #win-popup-message {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 40px 80px;
+        border-radius: 15px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 900;
       }
     </style>
   </head>
   <body>
-    <div id="game-board"></div>
-    <button id="restart-button">Restart Game</button>
+    <div class="container">
+      <div id="game-board"></div>
+      <button id="restart-button">Restart Game</button>
+    </div>
+    <div id="win-popup-message" hidden>
+      <p>You won!🥇</p>
+      <button id="play-again-button">Play Again</button>
+    </div>
     <script src="./src/memory_game.js"></script>
   </body>
 </html>
