@@ -1,9 +1,10 @@
 const setupDom = (document) => {
   const symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
-  const winPopupMessage = document.getElementById("win-popup-message");
-  const container = document.getElementsByClassName("container")[0];
-  let gameBoard = document.getElementById("game-board");
-  let restartButton = document.getElementById("restart-button");
+  const winPopupMessage = document.querySelector(".win-popup-message");
+  const container = document.querySelector(".container");
+  let gameBoard = document.querySelector("#game-board");
+  let startButton = document.querySelector("#start-button");
+  let gameStarted = false;
   let cards = [];
   let firstCard = null;
   let secondCard = null;
@@ -29,7 +30,20 @@ const setupDom = (document) => {
     });
   }
 
+  function disableCards() {
+    cards.forEach((card) => {
+      card.classList.add("disabled");
+    });
+  }
+
+  function enableCards() {
+    cards.forEach((card) => {
+      card.classList.remove("disabled");
+    });
+  }
+
   function flipCard(card) {
+    if (!gameStarted) return;
     if (
       card.classList.contains("matched") ||
       card === firstCard ||
@@ -72,8 +86,7 @@ const setupDom = (document) => {
 
   function displayWinMessage() {
     winPopupMessage.style.display = "block";
-    restartButton.style.display = "none";
-    container.classList.add("dimmed-container");
+    container.classList.remove("fully-bright-container");
   }
 
   function resetFlippedCards() {
@@ -81,7 +94,7 @@ const setupDom = (document) => {
     secondCard = null;
   }
 
-  function restartGame() {
+  function startGame() {
     gameBoard.innerHTML = "";
     matchedPairs = 0;
     firstCard = null;
@@ -90,15 +103,21 @@ const setupDom = (document) => {
     createBoard();
   }
 
-  restartButton.addEventListener("click", restartGame);
-  createBoard();
-
-  document.getElementById("play-again-button").addEventListener("click", () => {
-    restartGame();
-    winPopupMessage.style.display = "none";
-    container.classList.remove("dimmed-container");
-    restartButton.style.display = "block";
+  startButton.addEventListener("click", () => {
+    gameStarted = true;
+    createBoard();
+    enableCards();
+    document.querySelector(".start-game-message").style.display = "none";
+    container.classList.add("fully-bright-container");
   });
+
+  document.querySelector("#play-again-button").addEventListener("click", () => {
+    startGame();
+    winPopupMessage.style.display = "none";
+    container.classList.add("fully-bright-container");
+  });
+  createBoard();
+  disableCards();
 };
 
 if (typeof document !== "undefined") {

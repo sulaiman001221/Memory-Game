@@ -1,10 +1,10 @@
-const { setupDom } = require("../src/memory_game");
+const { setupDom, shuffle } = require("../src/memory_game");
 const { JSDOM } = require("jsdom");
 const fs = require("fs");
 const path = require("path");
 
 describe("Memory Game", () => {
-  let gameBoard, restartButton, cards, dom, document, html;
+  let gameBoard, startButton, cards, dom, document, html;
 
   beforeEach(function () {
     html = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
@@ -13,7 +13,7 @@ describe("Memory Game", () => {
     setupDom(document);
 
     gameBoard = document.getElementById("game-board");
-    restartButton = document.getElementById("restart-button");
+    startButton = document.getElementById("start-button");
     cards = gameBoard.querySelectorAll(".card");
   });
 
@@ -25,11 +25,33 @@ describe("Memory Game", () => {
   });
 
   it("shuffle the cards each time a new game is started", () => {
-    const initialOrder = Array.from(cards).map((card) => card.dataset.symbol);
-    restartButton.click();
-    const newOrder = Array.from(document.querySelectorAll(".card")).map(
-      (card) => card.dataset.symbol
-    );
-    expect(newOrder).not.toEqual(initialOrder);
+    const mockFunction = {
+      shuffle: shuffle(),
+    };
+    spyOn(mockFunction, shuffle);
+    startButton.click();
+    expect(mockFunction.shuffle).toHaveBeenCalled();
   });
+
+  // it("should flip a hidden card when clicked", () => {
+  //   const card = cards[0];
+  //   expect(card.classList.contains("hidden")).toBe(true);
+  //   const flipCardSpy = spyOn(card, "click").and.callThrough();
+  //   card.click();
+  //   expect(flipCardSpy).toHaveBeenCalled();
+  //   expect(card.classList.contains("hidden")).toBe(false);
+  //   expect(card.textContent).toBe(card.dataset.symbol);
+  // });
+
+  // it("should not flip a card that has already been flipped", () => {
+  //   const card = cards[0];
+  //   card.click();
+  //   expect(card.classList.contains("hidden")).toBe(false);
+  //   expect(card.textContent).toBe(card.dataset.symbol);
+  //   card.click();
+  //   expect(card.classList.contains("hidden")).toBe(false);
+  //   expect(card.textContent).toBe(card.dataset.symbol);
+  // });
+
+  it("should match the cards if cards of similar symbols are opened", () => {});
 });

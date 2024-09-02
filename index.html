@@ -25,10 +25,11 @@
           rgba(163, 154, 204, 1) 36%,
           rgba(79, 71, 169, 1) 100%
         );
+        filter: brightness(35%);
       }
 
-      .dimmed-container {
-        filter: brightness(35%);
+      .fully-bright-container {
+        filter: brightness(100%);
       }
 
       #game-board {
@@ -60,6 +61,11 @@
         margin-bottom: 10px;
       }
 
+      .card.disabled {
+        pointer-events: none;
+        cursor: default;
+      }
+
       .card.matched {
         background-color: #8bc34a;
         cursor: default;
@@ -82,7 +88,7 @@
         font-size: 16px;
       }
 
-      #win-popup-message {
+      .popup-box {
         position: fixed;
         top: 50%;
         left: 50%;
@@ -99,11 +105,14 @@
   <body>
     <div class="container">
       <div id="game-board"></div>
-      <button id="restart-button">Restart Game</button>
     </div>
-    <div id="win-popup-message" hidden>
+    <div class="win-popup-message popup-box" hidden>
       <p>You won!🥇</p>
       <button id="play-again-button">Play Again</button>
+    </div>
+    <div class="start-game-message popup-box">
+      <p>Your role is to match 8 pairs</p>
+      <button id="start-button">Start</button>
     </div>
     <script src="./src/memory_game.js"></script>
   </body>
