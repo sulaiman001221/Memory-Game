@@ -129,6 +129,7 @@ function setupDom(document) {
       )
     )
   );
+  cards.forEach((card) => card.classList.add("disabled"));
 }
 
 if (typeof document !== "undefined") {
