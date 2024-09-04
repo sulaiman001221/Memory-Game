@@ -73,7 +73,6 @@ function setupDom(document) {
   const container = document.querySelector(".container");
   let gameBoard = document.querySelector("#game-board");
   let startButton = document.querySelector("#start-button");
-  let gameStarted = false;
   let cards = [];
   let gameState = { firstCard: null, secondCard: null };
   let matchedPairs = { value: 0 };
@@ -108,7 +107,6 @@ function setupDom(document) {
   };
 
   startButton.addEventListener("click", () => {
-    gameStarted = true;
     document.querySelector(".start-game-message").style.display = "none";
     container.classList.add("fully-bright-container");
     cards.forEach((card) => card.classList.remove("disabled"));
@@ -131,7 +129,6 @@ function setupDom(document) {
       )
     )
   );
-  cards.forEach((card) => card.classList.add("disabled"));
 }
 
 if (typeof document !== "undefined") {
