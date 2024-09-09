@@ -141,8 +141,6 @@ if (typeof document !== "undefined") {
 
 module.exports = {
   setupDom,
-  shuffle,
-  flipCard,
   checkMatch,
   startGame,
   displayWinMessage,
