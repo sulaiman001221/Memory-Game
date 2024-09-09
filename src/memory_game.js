@@ -94,12 +94,7 @@ function checkMatch(card1, card2) {
     card1.classList.add("matched");
     card2.classList.add("matched");
     matchedPairs += 1;
-    if (matchedPairs === symbols.length) {
-      setTimeout(() => {
-        restartButton.style.display = "none";
-        displayWinMessage();
-      }, 500);
-    }
+    displayWinMessage(matchedPairs, symbols);
     resetFlippedCards();
   } else {
     setTimeout(() => {
@@ -112,9 +107,14 @@ function checkMatch(card1, card2) {
   }
 }
 
-function displayWinMessage() {
-  winPopupMessage.style.display = "block";
-  container.classList.remove("fully-bright-container");
+function displayWinMessage(matched, allSymbols) {
+  if (matched === allSymbols.length) {
+    setTimeout(() => {
+      restartButton.style.display = "none";
+      winPopupMessage.style.display = "block";
+      container.classList.remove("fully-bright-container");
+    }, 500);
+  }
 }
 
 function resetFlippedCards() {
@@ -145,4 +145,5 @@ module.exports = {
   flipCard,
   checkMatch,
   startGame,
+  displayWinMessage,
 };

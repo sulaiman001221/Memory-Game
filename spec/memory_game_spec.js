@@ -1,33 +1,39 @@
 const {
   setupDom,
-  shuffle,
-  flipCard,
   checkMatch,
   startGame,
+  displayWinMessage,
 } = require("../src/memory_game");
-const memoryGame = require("../src/memory_game");
 const { JSDOM } = require("jsdom");
 const fs = require("fs");
 const path = require("path");
 
 describe("Memory Game", () => {
-  let document, gameBoard, cards, startButton, restartButton, symbols;
+  let document,
+    gameBoard,
+    cards,
+    startButton,
+    restartButton,
+    winPopupMessage,
+    symbols,
+    window;
 
   beforeEach(() => {
     const html = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
     const dom = new JSDOM(html);
+    window = dom.window;
     document = dom.window.document;
-
     setupDom(document);
     gameBoard = document.getElementById("game-board");
     cards = gameBoard.querySelectorAll(".card");
     startButton = document.getElementById("start-button");
     restartButton = document.getElementById("restart-button");
+    winPopupMessage = document.querySelector(".win-popup-message");
+    symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
   });
 
   it("should create a board with a duplicate of available symbols and disabled cards", () => {
     startGame();
-    symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
     const mockCards = gameBoard.querySelectorAll(".card");
     cards.forEach((card) => {
       expect(card.classList.contains("disabled")).toBe(true);
@@ -39,10 +45,8 @@ describe("Memory Game", () => {
     const startGameMessage = document.querySelector(".start-game-message");
     const container = document.querySelector(".container");
     startButton.click();
-
     expect(startGameMessage.style.display).toBe("none");
     expect(container.classList.contains("fully-bright-container")).toBe(true);
-
     cards.forEach((card) => {
       expect(card.classList.contains("disabled")).toBe(false);
     });
@@ -70,7 +74,6 @@ describe("Memory Game", () => {
     const mockCard = gameBoard.querySelector(".card");
     mockCard.click();
     expect(mockCard.classList.contains("hidden")).toBe(false);
-
     mockCard.click();
     expect(mockCard.classList.contains("hidden")).toBe(false);
   });
@@ -86,7 +89,6 @@ describe("Memory Game", () => {
     card2.click();
     expect(card1.classList.contains("hidden")).toBe(false);
     expect(card2.classList.contains("hidden")).toBe(false);
-
     checkMatch(card1, card2);
 
     setTimeout(() => {
@@ -129,33 +131,29 @@ describe("Memory Game", () => {
   });
 
   it("should display a win message when all the cards have been matched", () => {
-   
+    const mockWinPopupMessage = winPopupMessage;
+    const matchedCards = 8;
+    displayWinMessage(matchedCards, symbols);
+    setTimeout(() => {
+      expect(mockWinPopupMessage.style.display).toBe("block");
+      expect(container.classList.contains("fully-bright-container")).toBe(
+        false
+      );
+    }, 0);
   });
 
-  // it("should restart the game when the play again button is clicked", () => {
-  //   const startGameMessage = document.createElement("div");
-  //   startGameMessage.className = "start-game-message";
-  //   const container = document.createElement("div");
-  //   container.className = "container";
-  //   const winPopupMessage = document.createElement("div");
-  //   winPopupMessage.className = "win-popup-message";
-  //   const playAgainButton = document.createElement("button");
-  //   playAgainButton.id = "play-again-button";
+  it("should restart the game when the play again button is clicked", () => {
+    const mockWinPopupMessage = winPopupMessage;
+    const mockBoard = gameBoard.querySelectorAll(".card");
+    const playAgainButton = restartButton;
+    mockWinPopupMessage.style.display = "block";
+    playAgainButton.click();
 
-  //   document.body.appendChild(gameBoard);
-  //   document.body.appendChild(startGameMessage);
-  //   document.body.appendChild(container);
-  //   document.body.appendChild(winPopupMessage);
-  //   document.body.appendChild(playAgainButton);
-
-  //   setupDom(document);
-  //   winPopupMessage.style.display = "block";
-  //   playAgainButton.click();
-
-  //   setTimeout(() => {
-  //     expect(winPopupMessage.style.display).toBe("none");
-  //     expect(container.classList.contains("fully-bright-container")).toBe(true);
-  //     // Ensure startGame is called (assuming you have a way to verify this)
-  //   }, 0);
-  // });
+    setTimeout(() => {
+      expect(mockWinPopupMessage.style.display).toBe("none");
+      expect(container.classList.contains("fully-bright-container")).toBe(true);
+      expect(mockBoard.length).toBe(symbols.length * 2);
+      expect(mockBoard.classList.contains("disabled")).toBe(false);
+    }, 0);
+  });
 });
