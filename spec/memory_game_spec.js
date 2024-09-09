@@ -15,8 +15,7 @@ describe("Memory Game", () => {
     startButton,
     restartButton,
     winPopupMessage,
-    symbols,
-    window;
+    symbols;
 
   beforeEach(() => {
     const html = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
