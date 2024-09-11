@@ -7,26 +7,28 @@ let winPopupMessage,
   restartButton,
   createBoard;
 
-const setupDom = (document) => {
+const domElements = (document) => {
   winPopupMessage = document.querySelector(".win-popup-message");
   container = document.querySelector(".container");
   gameBoard = document.querySelector("#game-board");
   startButton = document.querySelector("#start-button");
   restartButton = document.querySelector("#restart-button");
+  playAgainButton = document.querySelector("#play-again-button");
+};
 
+function setStartButtonClickEvent() {
   startButton.addEventListener("click", () => {
     enableCards();
     const startGameMessage = document.querySelector(".start-game-message");
     startGameMessage.style.display = "none";
     container.classList.add("fully-bright-container");
-    restartButton.style.display = "block";
   });
+}
 
+const setupDom = (document) => {
   restartButton.addEventListener("click", () => {
     startGame();
   });
-
-  const playAgainButton = document.querySelector("#play-again-button");
 
   playAgainButton.addEventListener("click", () => {
     startGame();
@@ -42,7 +44,10 @@ const setupDom = (document) => {
       const newCard = document.createElement("div");
       newCard.classList.add("hidden", "card");
       newCard.dataset.symbol = symbol;
-      newCard.addEventListener("click", () => flipCard(newCard));
+      newCard.addEventListener("click", () => {
+        flipCard(newCard);
+        displayRestartButton();
+      });
       gameBoard.appendChild(newCard);
       cards.push(newCard);
     });
@@ -86,6 +91,12 @@ function flipCard(card) {
   } else if (!secondCard) {
     secondCard = card;
     checkMatch(firstCard, secondCard);
+  }
+}
+
+function displayRestartButton() {
+  if (restartButton.style.display !== "block") {
+    restartButton.style.display = "block";
   }
 }
 
