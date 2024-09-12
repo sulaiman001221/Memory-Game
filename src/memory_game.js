@@ -5,37 +5,26 @@ let winPopupMessage,
   gameBoard,
   startButton,
   restartButton,
-  createBoard;
+  createBoard,
+  startGameMessage;
 
-const domElements = (document) => {
+let cards = [];
+let firstCard = null;
+let secondCard = null;
+let matchedPairs = 0;
+
+function setupDom(document) {
   winPopupMessage = document.querySelector(".win-popup-message");
   container = document.querySelector(".container");
   gameBoard = document.querySelector("#game-board");
   startButton = document.querySelector("#start-button");
   restartButton = document.querySelector("#restart-button");
   playAgainButton = document.querySelector("#play-again-button");
-};
+  startGameMessage = document.querySelector(".start-game-message");
 
-function setStartButtonClickEvent() {
-  startButton.addEventListener("click", () => {
-    enableCards();
-    const startGameMessage = document.querySelector(".start-game-message");
-    startGameMessage.style.display = "none";
-    container.classList.add("fully-bright-container");
-  });
-}
-
-const setupDom = (document) => {
-  restartButton.addEventListener("click", () => {
-    startGame();
-  });
-
-  playAgainButton.addEventListener("click", () => {
-    startGame();
-    winPopupMessage.style.display = "none";
-    container.classList.add("fully-bright-container");
-    restartButton.style.display = "block";
-  });
+  setStartButtonClickEvent();
+  setRestartButtonClickEvent();
+  setPlayAgainButtonClickEvent();
 
   createBoard = () => {
     if (!gameBoard) return;
@@ -50,14 +39,36 @@ const setupDom = (document) => {
       });
       gameBoard.appendChild(newCard);
       cards.push(newCard);
+      disableCards();
     });
   };
-};
+}
 
-let cards = [];
-let firstCard = null;
-let secondCard = null;
-let matchedPairs = 0;
+function setStartButtonClickEvent() {
+  startButton.addEventListener("click", () => {
+    enableCards();
+    startGameMessage.style.display = "none";
+    container.classList.add("fully-bright-container");
+  });
+}
+
+function setRestartButtonClickEvent() {
+  restartButton.addEventListener("click", () => {
+    startGame();
+    startGameMessage.style.display = "block";
+    container.classList.remove("fully-bright-container");
+    restartButton.style.display = "none";
+  });
+}
+
+function setPlayAgainButtonClickEvent() {
+  playAgainButton.addEventListener("click", () => {
+    startGame();
+    enableCards();
+    winPopupMessage.style.display = "none";
+    container.classList.add("fully-bright-container");
+  });
+}
 
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -90,36 +101,39 @@ function flipCard(card) {
     firstCard = card;
   } else if (!secondCard) {
     secondCard = card;
-    checkMatch(firstCard, secondCard);
+    checkMatch();
   }
 }
 
 function displayRestartButton() {
-  if (restartButton.style.display !== "block") {
+  if (
+    restartButton.style.display !== "block" &&
+    matchedPairs !== symbols.length
+  ) {
     restartButton.style.display = "block";
   }
 }
 
-function checkMatch(card1, card2) {
-  if (card1.dataset.symbol === card2.dataset.symbol) {
-    card1.classList.add("matched");
-    card2.classList.add("matched");
+function checkMatch() {
+  if (firstCard.dataset.symbol === secondCard.dataset.symbol) {
+    firstCard.classList.add("matched");
+    secondCard.classList.add("matched");
     matchedPairs += 1;
-    displayWinMessage(matchedPairs, symbols);
+    displayWinMessage();
     resetFlippedCards();
   } else {
     setTimeout(() => {
-      card1.classList.add("hidden");
-      card2.classList.add("hidden");
-      card1.textContent = "";
-      card2.textContent = "";
+      firstCard.classList.add("hidden");
+      secondCard.classList.add("hidden");
+      firstCard.textContent = "";
+      secondCard.textContent = "";
       resetFlippedCards();
     }, 1000);
   }
 }
 
-function displayWinMessage(matched, allSymbols) {
-  if (matched === allSymbols.length) {
+function displayWinMessage() {
+  if (matchedPairs === symbols.length) {
     setTimeout(() => {
       restartButton.style.display = "none";
       winPopupMessage.style.display = "block";
@@ -146,13 +160,7 @@ if (typeof document !== "undefined") {
   document.addEventListener("DOMContentLoaded", () => {
     setupDom(document);
     createBoard();
-    disableCards();
   });
 }
 
-module.exports = {
-  setupDom,
-  checkMatch,
-  startGame,
-  displayWinMessage,
-};
+module.exports = { setupDom, startGame };
