@@ -64,9 +64,8 @@ function setRestartButtonClickEvent() {
 function setPlayAgainButtonClickEvent() {
   playAgainButton.addEventListener("click", () => {
     startGame();
-    enableCards();
     winPopupMessage.style.display = "none";
-    container.classList.add("fully-bright-container");
+    startGameMessage.style.display = "block";
   });
 }
 

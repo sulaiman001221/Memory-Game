@@ -29,10 +29,12 @@ describe("Memory Game", () => {
     restartButton = document.getElementById("restart-button");
     symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
     startGame();
+    jasmine.clock().install();
   });
 
   afterEach(() => {
     document.body.innerHTML = "";
+    jasmine.clock().uninstall();
   });
 
   describe("Board Initialization", () => {
@@ -91,10 +93,9 @@ describe("Memory Game", () => {
       expect(card1.classList.contains("hidden")).toBe(false);
       expect(card2.classList.contains("hidden")).toBe(false);
 
-      setTimeout(() => {
-        expect(card1.classList.contains("hidden")).toBe(true);
-        expect(card2.classList.contains("hidden")).toBe(true);
-      });
+      jasmine.clock().tick(1000);
+      expect(card1.classList.contains("hidden")).toBe(true);
+      expect(card2.classList.contains("hidden")).toBe(true);
     });
 
     it("should only display the restart button when the first card is flipped", () => {
@@ -145,22 +146,16 @@ describe("Memory Game", () => {
       expect(restartButton.style.display).toBe("none");
     });
 
-    it("should restart the game when the play again button is clicked", () => {
+    it("should land on the start game page when the play again button is clicked", () => {
       const playAgainButton = document.querySelector("#play-again-button");
       playAgainButton.click();
 
-      setTimeout(() => {
-        expect(winPopupMessage.style.display).toBe("none");
-        expect(container.classList.contains("fully-bright-container")).toBe(
-          true
-        );
-        expect(gameBoard.length).toBe(symbols.length * 2);
-        expect(gameBoard.classList.contains("disabled")).toBe(false);
-      }, 0);
+      expect(winPopupMessage.style.display).toBe("none");
+      expect(startGameMessage.style.display).toBe("block");
     });
   });
 
-  describe("Game End", () => {
+  describe("Win Scenario", () => {
     it("should display a win message when all the cards have been matched", () => {
       const mockCardsArray = Array.from(gameBoard.querySelectorAll(".card"));
       mockCardsArray.forEach((card) => {
@@ -173,13 +168,11 @@ describe("Memory Game", () => {
         );
         card2.click();
       });
-
-      setTimeout(() => {
-        expect(winPopupMessage.style.display).toBe("block");
-        expect(container.classList.contains("fully-bright-container")).toBe(
-          false
-        );
-      }, 0);
+      jasmine.clock().tick(500);
+      expect(winPopupMessage.style.display).toBe("block");
+      expect(container.classList.contains("fully-bright-container")).toBe(
+        false
+      );
     });
   });
 });
