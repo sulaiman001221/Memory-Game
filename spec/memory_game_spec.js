@@ -3,38 +3,44 @@ const { JSDOM } = require("jsdom");
 const fs = require("fs");
 const path = require("path");
 
-describe("Memory Game", () => {
-  let document,
-    gameBoard,
-    cards,
-    startButton,
-    winPopupMessage,
-    symbols,
-    startGameMessage,
-    container,
-    restartButton;
+let document,
+  gameBoard,
+  cards,
+  startButton,
+  winPopupMessage,
+  container,
+  restartButton,
+  symbols;
 
+function setupTestDom() {
+  const html = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
+  const dom = new JSDOM(html);
+  global.window = dom.window;
+  document = dom.window.document;
+  setupDom(document);
+  gameBoard = document.getElementById("game-board");
+  startButton = document.getElementById("start-button");
+  winPopupMessage = document.querySelector(".win-popup-message");
+  container = document.querySelector(".container");
+  restartButton = document.getElementById("restart-button");
+  symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
+  cards = Array.from(gameBoard.querySelectorAll(".card"));
+}
+
+function teardownTestDom() {
+  document.body.innerHTML = "";
+  jasmine.clock().uninstall();
+}
+
+describe("Memory Game", () => {
   beforeEach(() => {
-    const html = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
-    const dom = new JSDOM(html);
-    window = dom.window;
-    document = dom.window.document;
-    setupDom(document);
-    gameBoard = document.getElementById("game-board");
-    cards = gameBoard.querySelectorAll(".card");
-    startButton = document.getElementById("start-button");
-    winPopupMessage = document.querySelector(".win-popup-message");
-    container = document.querySelector(".container");
-    startGameMessage = document.querySelector(".start-game-message");
-    restartButton = document.getElementById("restart-button");
-    symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
+    setupTestDom();
     startGame();
     jasmine.clock().install();
   });
 
   afterEach(() => {
-    document.body.innerHTML = "";
-    jasmine.clock().uninstall();
+    teardownTestDom();
   });
 
   describe("Board Initialization", () => {
