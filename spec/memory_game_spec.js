@@ -5,12 +5,12 @@ const path = require("path");
 
 let document,
   gameBoard,
-  cards,
   startButton,
   winPopupMessage,
   container,
   restartButton,
-  symbols;
+  symbols,
+  startGameMessage;
 
 function setupTestDom() {
   const html = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
@@ -24,7 +24,7 @@ function setupTestDom() {
   container = document.querySelector(".container");
   restartButton = document.getElementById("restart-button");
   symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
-  cards = Array.from(gameBoard.querySelectorAll(".card"));
+  startGameMessage = document.querySelector(".start-game-message");
 }
 
 function teardownTestDom() {
@@ -53,7 +53,7 @@ describe("Memory Game", () => {
     });
 
     it("should shuffle the cards when the game has been started", () => {
-      const initialOrder = Array.from(cards).map((card) => card.dataset.symbol);
+      const initialOrder = [...symbols, ...symbols];
       const newCards = gameBoard.querySelectorAll(".card");
       const newOrder = Array.from(newCards).map((card) => card.dataset.symbol);
       expect(newOrder).not.toEqual(initialOrder);
@@ -61,13 +61,16 @@ describe("Memory Game", () => {
   });
 
   describe("Start Game Event", () => {
-    it("should start the game when the start button is clicked", () => {
+    it("should start the game and initial hide the restart button when the start button is clicked", () => {
+      const computedStyle = window.getComputedStyle(restartButton);
+      const mockCardsArray = Array.from(gameBoard.querySelectorAll(".card"));
       startButton.click();
       expect(startGameMessage.style.display).toBe("none");
       expect(container.classList.contains("fully-bright-container")).toBe(true);
-      cards.forEach((card) => {
+      mockCardsArray.forEach((card) => {
         expect(card.classList.contains("disabled")).toBe(false);
       });
+      expect(computedStyle.display).toBe("none");
     });
   });
 
@@ -88,6 +91,20 @@ describe("Memory Game", () => {
       expect(mockCard.classList.contains("hidden")).toBe(false);
     });
 
+    it("should not allow flipping more than two cards at the same time", () => {
+      const mockCard = gameBoard.querySelectorAll(".card");
+      const card1 = mockCard[0];
+      const card2 = mockCard[1];
+      const card3 = mockCard[2];
+
+      card1.click();
+      card2.click();
+      card3.click();
+      expect(card1.classList.contains("hidden")).toBe(false);
+      expect(card2.classList.contains("hidden")).toBe(false);
+      expect(card3.classList.contains("hidden")).toBe(true);
+    });
+
     it("should hide the opened cards if their symbols are different", () => {
       const mockCardsArray = Array.from(gameBoard.querySelectorAll(".card"));
       const card1 = mockCardsArray[0];
@@ -104,9 +121,9 @@ describe("Memory Game", () => {
       expect(card2.classList.contains("hidden")).toBe(true);
     });
 
-    it("should only display the restart button when the first card is flipped", () => {
-      const mockCardsArray = Array.from(gameBoard.querySelectorAll(".card"));
-      const card = mockCardsArray[0];
+    it("should display the restart button when the first card is flipped", () => {
+      const mockCards = gameBoard.querySelectorAll(".card");
+      const card = mockCards[0];
       expect(restartButton.style.display).toBe("");
       card.click();
       expect(restartButton.style.display).toBe("block");

@@ -159,6 +159,7 @@ if (typeof document !== "undefined") {
   document.addEventListener("DOMContentLoaded", () => {
     setupDom(document);
     createBoard();
+    setStartButtonClickEvent();
   });
 }
 
