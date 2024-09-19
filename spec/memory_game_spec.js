@@ -39,6 +39,7 @@ describe("Memory Game", () => {
   beforeEach(() => {
     setupTestDom();
     spyOn(memoryGame, "createBoard").and.callThrough();
+    spyOn(memoryGame, "shuffle").and.callThrough();
     memoryGame.startGame();
   });
 
@@ -61,6 +62,7 @@ describe("Memory Game", () => {
       const newCards = gameBoard.querySelectorAll(".card");
       const newOrder = Array.from(newCards).map((card) => card.dataset.symbol);
       expect(newOrder).not.toEqual(initialOrder);
+      expect(memoryGame.shuffle).toHaveBeenCalled();
     });
   });
 

@@ -8,6 +8,10 @@
       rel="icon"
       href="https://cdn-icons-png.freepik.com/512/3607/3607127.png"
     />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap"
+      rel="stylesheet"
+    />
     <style>
       body {
         margin: 0;
@@ -78,7 +82,6 @@
         width: 150px;
         padding: 10px;
         border: 2px solid #333;
-        border-radius: 15px;
         background: linear-gradient(
           to bottom,
           rgba(69, 72, 77, 1) 0%,
@@ -91,18 +94,39 @@
         font-size: 16px;
       }
 
+      button:hover {
+        background: linear-gradient(
+          to bottom,
+          rgba(89, 92, 97, 1) 0%,
+          rgba(20, 20, 20, 1) 100%
+        );
+      }
+
       .popup-box {
         position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: #fff;
-        padding: 40px 80px;
+        background-color: rgba(163, 154, 204, 1);
+        padding: 25px 45px;
         border-radius: 15px;
         text-align: center;
-        font-size: 18px;
-        font-weight: 900;
-        user-select: none;
+        font-size: 20px;
+        border: 3px solid #333;
+      }
+
+      .win-popup-message {
+        padding: 22px 70px;
+      }
+
+      .popup-box p {
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-size: 20px;
+        margin-bottom: 40px;
+        color: #333;
+        position: relative;
+        text-shadow: 1px 1px 0 #000, 1px 1px 0 #222;
       }
     </style>
   </head>
