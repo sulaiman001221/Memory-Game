@@ -1,7 +1,6 @@
-const symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
-
 class MemoryGame {
   constructor(document) {
+    this.symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
     this.document = document;
     this.winPopupMessage = null;
     this.container = null;
@@ -37,7 +36,7 @@ class MemoryGame {
   createBoard() {
     if (!this.gameBoard) return;
 
-    const cardSymbols = this.shuffle([...symbols, ...symbols]);
+    const cardSymbols = this.shuffle([...this.symbols, ...this.symbols]);
     cardSymbols.forEach((symbol) => {
       const newCard = this.document.createElement("div");
       newCard.classList.add("hidden", "card");
@@ -119,7 +118,7 @@ class MemoryGame {
   displayRestartButton() {
     if (
       this.restartButton.style.display !== "block" &&
-      this.matchedPairs !== symbols.length
+      this.matchedPairs !== this.symbols.length
     ) {
       this.restartButton.style.display = "block";
     }
@@ -144,7 +143,7 @@ class MemoryGame {
   }
 
   displayWinMessage() {
-    if (this.matchedPairs === symbols.length) {
+    if (this.matchedPairs === this.symbols.length) {
       setTimeout(() => {
         this.restartButton.style.display = "none";
         this.winPopupMessage.style.display = "block";
@@ -170,7 +169,7 @@ class MemoryGame {
 
 if (typeof document !== "undefined") {
   document.addEventListener("DOMContentLoaded", () => {
-    const memoryGame = new MemoryGame(document);
+    new MemoryGame(document);
   });
 }
 

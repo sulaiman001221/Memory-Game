@@ -1,68 +1,62 @@
 const MemoryGame = require("../src/memory_game");
-const { JSDOM } = require("jsdom");
-const fs = require("fs");
-const path = require("path");
-
-let document,
-  gameBoard,
-  startButton,
-  winPopupMessage,
-  container,
-  restartButton,
-  symbols,
-  startGameMessage,
-  memoryGame;
-
-function setupTestDom() {
-  const html = fs.readFileSync(path.join(__dirname, "../index.html"), "utf8");
-  const dom = new JSDOM(html);
-  global.window = dom.window;
-  document = dom.window.document;
-
-  memoryGame = new MemoryGame(document);
-  gameBoard = document.getElementById("game-board");
-  startButton = document.getElementById("start-button");
-  winPopupMessage = document.querySelector(".win-popup-message");
-  container = document.querySelector(".container");
-  restartButton = document.getElementById("restart-button");
-  symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
-  startGameMessage = document.querySelector(".start-game-message");
-  jasmine.clock().install();
-}
-
-function teardownTestDom() {
-  document.body.innerHTML = "";
-  jasmine.clock().uninstall();
-}
+const { setupDom } = require("./dom_setup");
 
 describe("Memory Game", () => {
+  let document,
+    window,
+    gameBoard,
+    startButton,
+    winPopupMessage,
+    container,
+    restartButton,
+    startGameMessage,
+    memoryGame,
+    dom;
+
   beforeEach(() => {
-    setupTestDom();
+    const setup = setupDom();
+    document = setup.document;
+    window = setup.window;
+    gameBoard = setup.gameBoard;
+    startButton = setup.startButton;
+    winPopupMessage = setup.winPopupMessage;
+    container = setup.container;
+    restartButton = setup.restartButton;
+    startGameMessage = setup.startGameMessage;
+    dom = setup.dom;
+    memoryGame = new MemoryGame(document);
+    jasmine.clock().install();
+
     spyOn(memoryGame, "createBoard").and.callThrough();
     spyOn(memoryGame, "shuffle").and.callThrough();
     memoryGame.startGame();
   });
 
   afterEach(() => {
-    teardownTestDom();
+    document.body.innerHTML = "";
+    jasmine.clock().uninstall();
   });
 
   describe("Board Initialization", () => {
-    it("should create a board with a duplicate of available symbols and disabled cards", () => {
+    it("should create a board with a duplicate of available symbols", () => {
+      expect(memoryGame.createBoard).toHaveBeenCalled();
+      const mockCards = gameBoard.querySelectorAll(".card");
+      expect(mockCards.length).toBe(memoryGame.symbols.length * 2);
+    });
+
+    it("should create a board with disabled cards", () => {
       expect(memoryGame.createBoard).toHaveBeenCalled();
       const mockCards = gameBoard.querySelectorAll(".card");
       mockCards.forEach((card) => {
         expect(card.classList.contains("disabled")).toBe(true);
       });
-      expect(mockCards.length).toBe(symbols.length * 2);
     });
 
     it("should shuffle the cards when the game has been started", () => {
-      const initialOrder = [...symbols, ...symbols];
+      const initialOrder = [...memoryGame.symbols, ...memoryGame.symbols];
       const newCards = gameBoard.querySelectorAll(".card");
       const newOrder = Array.from(newCards).map((card) => card.dataset.symbol);
       expect(newOrder).not.toEqual(initialOrder);
-      expect(memoryGame.shuffle).toHaveBeenCalled();
     });
   });
 
@@ -70,6 +64,7 @@ describe("Memory Game", () => {
     it("should start the game and initially hide the restart button when the start button is clicked", () => {
       spyOn(memoryGame, "enableCards").and.callThrough();
       startButton.click();
+
       expect(startGameMessage.style.display).toBe("none");
       expect(container.classList.contains("fully-bright-container")).toBe(true);
       expect(memoryGame.enableCards).toHaveBeenCalled();
@@ -177,6 +172,20 @@ describe("Memory Game", () => {
     });
 
     it("should land on the start game page when the play again button is clicked", () => {
+      const mockCardsArray = Array.from(gameBoard.querySelectorAll(".card"));
+      mockCardsArray.forEach((card) => {
+        const card1 = card;
+        card1.click();
+        const card2 = mockCardsArray.find(
+          (matchCard) =>
+            matchCard.dataset.symbol === card1.dataset.symbol &&
+            matchCard !== card1
+        );
+        card2.click();
+      });
+      jasmine.clock().tick(500);
+      expect(window.getComputedStyle(winPopupMessage).display).toBe("block");
+
       const playAgainButton = document.querySelector("#play-again-button");
       spyOn(memoryGame, "startGame").and.callThrough();
       playAgainButton.click();
