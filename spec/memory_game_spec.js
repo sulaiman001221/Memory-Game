@@ -87,7 +87,7 @@ describe("Memory Game", () => {
       spyOn(memoryGame, "flipCard").and.callThrough();
       mockCard.click();
       mockCard.click();
-      expect(memoryGame.flipCard).toHaveBeenCalledTimes(2);
+      expect(memoryGame.flipCard).toHaveBeenCalledOnceWith(mockCard);
       expect(mockCard.classList.contains("hidden")).toBe(false);
     });
 

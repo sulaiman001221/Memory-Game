@@ -26,11 +26,18 @@ class MemoryGame {
     this.playAgainButton = this.document.querySelector("#play-again-button");
     this.startGameMessage = this.document.querySelector(".start-game-message");
 
-    this.setStartButtonClickEvent();
-    this.setRestartButtonClickEvent();
-    this.setPlayAgainButtonClickEvent();
-
+    this.setupEventListeners();
     this.createBoard();
+  }
+
+  setupEventListeners() {
+    this.startButton.addEventListener("click", () => this.startGameHandler());
+    this.restartButton.addEventListener("click", () =>
+      this.restartGameHandler()
+    );
+    this.playAgainButton.addEventListener("click", () =>
+      this.playAgainHandler()
+    );
   }
 
   createBoard() {
@@ -38,42 +45,54 @@ class MemoryGame {
 
     const cardSymbols = this.shuffle([...this.symbols, ...this.symbols]);
     cardSymbols.forEach((symbol) => {
-      const newCard = this.document.createElement("div");
-      newCard.classList.add("hidden", "card");
-      newCard.dataset.symbol = symbol;
-      newCard.addEventListener("click", () => {
-        this.flipCard(newCard);
-        this.displayRestartButton();
-      });
-      this.gameBoard.appendChild(newCard);
+      const newCard = this.createCardElement(symbol);
       this.cards.push(newCard);
     });
+
     this.disableCards();
   }
 
-  setStartButtonClickEvent() {
-    this.startButton.addEventListener("click", () => {
-      this.enableCards();
-      this.startGameMessage.style.display = "none";
-      this.container.classList.add("fully-bright-container");
-    });
+  createCardElement(symbol) {
+    const newCard = this.document.createElement("div");
+    newCard.classList.add("hidden", "card");
+    newCard.dataset.symbol = symbol;
+    newCard.addEventListener("click", () => this.handleCardClick(newCard));
+    this.gameBoard.appendChild(newCard);
+    return newCard;
   }
 
-  setRestartButtonClickEvent() {
-    this.restartButton.addEventListener("click", () => {
-      this.startGame();
-      this.startGameMessage.style.display = "block";
-      this.container.classList.remove("fully-bright-container");
-      this.restartButton.style.display = "none";
-    });
+  handleCardClick(card) {
+    if (this.isCardClickable(card)) {
+      this.flipCard(card);
+      this.displayRestartButton();
+    }
   }
 
-  setPlayAgainButtonClickEvent() {
-    this.playAgainButton.addEventListener("click", () => {
-      this.startGame();
-      this.winPopupMessage.style.display = "none";
-      this.startGameMessage.style.display = "block";
-    });
+  isCardClickable(card) {
+    return !(
+      card.classList.contains("matched") ||
+      card === this.firstCard ||
+      this.secondCard
+    );
+  }
+
+  startGameHandler() {
+    this.enableCards();
+    this.startGameMessage.style.display = "none";
+    this.container.classList.add("fully-bright-container");
+  }
+
+  restartGameHandler() {
+    this.startGame();
+    this.startGameMessage.style.display = "block";
+    this.container.classList.remove("fully-bright-container");
+    this.restartButton.style.display = "none";
+  }
+
+  playAgainHandler() {
+    this.startGame();
+    this.winPopupMessage.style.display = "none";
+    this.startGameMessage.style.display = "block";
   }
 
   shuffle(array) {
@@ -97,19 +116,12 @@ class MemoryGame {
   }
 
   flipCard(card) {
-    if (
-      card.classList.contains("matched") ||
-      card === this.firstCard ||
-      this.secondCard
-    ) {
-      return;
-    }
     card.classList.remove("hidden");
     card.textContent = card.dataset.symbol;
 
     if (!this.firstCard) {
       this.firstCard = card;
-    } else if (!this.secondCard) {
+    } else {
       this.secondCard = card;
       this.checkMatch();
     }
@@ -126,20 +138,28 @@ class MemoryGame {
 
   checkMatch() {
     if (this.firstCard.dataset.symbol === this.secondCard.dataset.symbol) {
-      this.firstCard.classList.add("matched");
-      this.secondCard.classList.add("matched");
-      this.matchedPairs += 1;
-      this.displayWinMessage();
-      this.resetFlippedCards();
+      this.matchCards();
     } else {
-      setTimeout(() => {
-        this.firstCard.classList.add("hidden");
-        this.secondCard.classList.add("hidden");
-        this.firstCard.textContent = "";
-        this.secondCard.textContent = "";
-        this.resetFlippedCards();
-      }, 1000);
+      this.hideUnmatchedCards();
     }
+  }
+
+  matchCards() {
+    this.firstCard.classList.add("matched");
+    this.secondCard.classList.add("matched");
+    this.matchedPairs += 1;
+    this.displayWinMessage();
+    this.resetFlippedCards();
+  }
+
+  hideUnmatchedCards() {
+    setTimeout(() => {
+      this.firstCard.classList.add("hidden");
+      this.secondCard.classList.add("hidden");
+      this.firstCard.textContent = "";
+      this.secondCard.textContent = "";
+      this.resetFlippedCards();
+    }, 1000);
   }
 
   displayWinMessage() {
