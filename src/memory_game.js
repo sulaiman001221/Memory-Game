@@ -42,6 +42,7 @@ class MemoryGame {
 
   createBoard() {
     if (!this.gameBoard) return;
+    this.cards = [];
 
     const cardSymbols = this.shuffle([...this.symbols, ...this.symbols]);
     cardSymbols.forEach((symbol) => {
@@ -148,7 +149,7 @@ class MemoryGame {
     this.firstCard.classList.add("matched");
     this.secondCard.classList.add("matched");
     this.matchedPairs += 1;
-    this.displayWinMessage();
+    if (this.matchedPairs === 8) this.displayWinMessage();
     this.resetFlippedCards();
   }
 

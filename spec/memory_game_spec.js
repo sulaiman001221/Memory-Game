@@ -4,8 +4,7 @@ const { setupDom } = require("./dom_setup");
 describe("Memory Game", () => {
   let document,
     window,
-    gameBoard,
-    startButton,
+    setup,
     winPopupMessage,
     container,
     restartButton,
@@ -32,16 +31,16 @@ describe("Memory Game", () => {
   };
 
   beforeEach(() => {
-    const setup = setupDom();
+    setup = setupDom();
     document = setup.document;
     window = setup.window;
-    gameBoard = setup.gameBoard;
-    startButton = setup.startButton;
+    memoryGame = new MemoryGame(document);
+    const gameBoard = setup.gameBoard;
     winPopupMessage = setup.winPopupMessage;
     container = setup.container;
     restartButton = setup.restartButton;
     startGameMessage = setup.startGameMessage;
-    memoryGame = new MemoryGame(document);
+
     mockCards = gameBoard.querySelectorAll(".card");
     mockCard = mockCards[0];
     mockCardsArray = Array.from(gameBoard.querySelectorAll(".card"));
@@ -55,13 +54,6 @@ describe("Memory Game", () => {
     spyOn(memoryGame, "createBoard").and.callThrough();
     spyOn(memoryGame, "disableCards").and.callThrough();
     memoryGame.startGame();
-    spyOn(memoryGame, "shuffle").and.callThrough();
-    spyOn(memoryGame, "enableCards").and.callThrough();
-    spyOn(memoryGame, "flipCard").and.callThrough();
-    spyOn(memoryGame, "checkMatch").and.callThrough();
-    spyOn(memoryGame, "displayRestartButton").and.callThrough();
-    spyOn(memoryGame, "displayWinMessage").and.callThrough();
-    spyOn(memoryGame, "startGame").and.callThrough();
   });
 
   afterEach(() => {
@@ -77,9 +69,15 @@ describe("Memory Game", () => {
     });
 
     it("should shuffle the cards when the board is created", () => {
+      const initialSymbolOrder = [...memoryGame.symbols, ...memoryGame.symbols];
+      spyOn(memoryGame, "shuffle").and.callThrough();
       memoryGame.createBoard();
+      const shuffledSymbols = memoryGame.cards.map(
+        (card) => card.dataset.symbol
+      );
+      expect(shuffledSymbols).not.toEqual(initialSymbolOrder);
       expect(memoryGame.shuffle).toHaveBeenCalledOnceWith(
-        jasmine.arrayContaining([...memoryGame.symbols, ...memoryGame.symbols])
+        jasmine.arrayContaining(initialSymbolOrder)
       );
     });
 
@@ -93,6 +91,8 @@ describe("Memory Game", () => {
 
   describe("Start Game Event", () => {
     it("should start the game and initially hide the restart button when the start button is clicked", () => {
+      spyOn(memoryGame, "enableCards").and.callThrough();
+      const startButton = setup.startButton;
       startButton.click();
       expect(startGameMessage.style.display).toBe("none");
       expect(container.classList.contains("fully-bright-container")).toBe(true);
@@ -102,6 +102,11 @@ describe("Memory Game", () => {
   });
 
   describe("Card Interaction", () => {
+    beforeEach(() => {
+      spyOn(memoryGame, "flipCard").and.callThrough();
+      spyOn(memoryGame, "checkMatch").and.callThrough();
+    });
+
     it("should flip a card when clicked", () => {
       mockCard.click();
       expect(memoryGame.flipCard).toHaveBeenCalledOnceWith(mockCard);
@@ -144,6 +149,7 @@ describe("Memory Game", () => {
     });
 
     it("should display the restart button when the first card is flipped", () => {
+      spyOn(memoryGame, "displayRestartButton").and.callThrough();
       expect(window.getComputedStyle(restartButton).display).toBe("none");
       mockCard.click();
       expect(memoryGame.displayRestartButton).toHaveBeenCalledTimes(1);
@@ -168,7 +174,14 @@ describe("Memory Game", () => {
   });
 
   describe("Restart Game Event", () => {
+    beforeEach(() => {
+      spyOn(memoryGame, "startGame").and.callThrough();
+    });
+
     it("should restart the game when the restart button is clicked", () => {
+      mockCard.click();
+      expect(mockCard.classList.contains("hidden")).toBe(false);
+
       restartButton.click();
       expect(memoryGame.startGame).toHaveBeenCalledTimes(1);
       expect(startGameMessage.style.display).toBe("block");
@@ -198,8 +211,9 @@ describe("Memory Game", () => {
 
   describe("Win Scenario", () => {
     it("should display a win message when all the cards have been matched", () => {
+      spyOn(memoryGame, "displayWinMessage").and.callThrough();
       flipAllMatchingPairs();
-      expect(memoryGame.displayWinMessage).toHaveBeenCalledTimes(8);
+      expect(memoryGame.displayWinMessage).toHaveBeenCalledTimes(1);
       expect(winPopupMessage.style.display).toBe("block");
       expect(container.classList.contains("fully-bright-container")).toBe(
         false
