@@ -119,7 +119,6 @@ class MemoryGame {
   flipCard(card) {
     card.classList.remove("hidden");
     card.textContent = card.dataset.symbol;
-
     if (!this.firstCard) {
       this.firstCard = card;
     } else {
