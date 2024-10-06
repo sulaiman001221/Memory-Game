@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Memory Game MVP</title>
+    <link
+      rel="icon"
+      href="https://cdn-icons-png.freepik.com/512/3607/3607127.png"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="game-board"></div>
+      <button id="restart-button" hidden>Restart</button>
+    </div>
+    <div class="win-popup-message popup-box" hidden>
+      <p>You won!🥇</p>
+      <button id="play-again-button">Play Again</button>
+    </div>
+    <div class="start-game-message popup-box">
+      <p>Your role is to match 8 pairs</p>
+      <button id="start-button">Start</button>
+    </div>
+    <script src="/dist/bundle.js"></script>
+  </body>
+</html>
