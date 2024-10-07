@@ -1,5 +1,5 @@
 const MemoryGame = require("../src/memory_game");
-const { setupDom } = require("./dom_setup");
+const { setupDom } = require("./helpers/dom_setup");
 
 describe("Memory Game", () => {
   let document,
