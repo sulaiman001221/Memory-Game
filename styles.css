@@ -24,11 +24,15 @@ body {
   filter: brightness(100%);
 }
 
-#game-board {
+.game-board {
   display: grid;
   grid-template-columns: repeat(4, 100px);
   grid-gap: 10px;
   margin-bottom: 20px;
+}
+
+.use-3-cols {
+  grid-template-columns: repeat(3, 100px);
 }
 
 .hidden {
@@ -113,4 +117,47 @@ button:hover {
   color: #333;
   position: relative;
   text-shadow: 1px 1px 0 #000, 1px 1px 0 #222;
+}
+
+.grid-options {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 60px;
+}
+
+.grid-size {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: rgba(163, 154, 204, 1);
+  border: 3px solid #333;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.grid-size:hover {
+  background: linear-gradient(
+    to bottom,
+    rgba(100, 100, 200, 1) 0%,
+    rgba(130, 130, 230, 1) 100%
+  );
+  transform: scale(1.1);
+}
+
+.selectGridButton {
+  background: linear-gradient(
+    to bottom,
+    rgba(100, 100, 200, 1) 0%,
+    rgba(130, 130, 230, 1) 100%
+  );
+  transform: none;
+  pointer-events: none;
+  cursor: default;
 }

@@ -1,6 +1,7 @@
 class MemoryGame {
   constructor(document) {
     this.symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
+    this.tempSymbols = [];
     this.document = document;
     this.winPopupMessage = null;
     this.container = null;
@@ -9,6 +10,9 @@ class MemoryGame {
     this.restartButton = null;
     this.playAgainButton = null;
     this.startGameMessage = null;
+    this.twoByThreeGridButton = null;
+    this.threeByFourGridButton = null;
+    this.fourByFourGridButton = null;
     this.cards = [];
     this.firstCard = null;
     this.secondCard = null;
@@ -20,14 +24,18 @@ class MemoryGame {
   setupDom() {
     this.winPopupMessage = this.document.querySelector(".win-popup-message");
     this.container = this.document.querySelector(".container");
-    this.gameBoard = this.document.querySelector("#game-board");
+    this.gameBoard = this.document.querySelector(".game-board");
     this.startButton = this.document.querySelector("#start-button");
     this.restartButton = this.document.querySelector("#restart-button");
     this.playAgainButton = this.document.querySelector("#play-again-button");
     this.startGameMessage = this.document.querySelector(".start-game-message");
+    this.twoByThreeGridButton = this.document.querySelector("#grid-button-2x3");
+    this.threeByFourGridButton =
+      this.document.querySelector("#grid-button-3x4");
+    this.fourByFourGridButton = this.document.querySelector("#grid-button-4x4");
 
+    this.fourByFourButtonHandler();
     this.setupEventListeners();
-    this.createBoard();
   }
 
   setupEventListeners() {
@@ -38,13 +46,23 @@ class MemoryGame {
     this.playAgainButton.addEventListener("click", () =>
       this.playAgainHandler()
     );
+    this.twoByThreeGridButton.addEventListener("click", () =>
+      this.twoByThreeButtonHandler()
+    );
+    this.threeByFourGridButton.addEventListener("click", () =>
+      this.threeByFourButtonHandler()
+    );
+    this.fourByFourGridButton.addEventListener("click", () =>
+      this.fourByFourButtonHandler()
+    );
   }
 
-  createBoard() {
+  createBoard(cardsNum) {
     if (!this.gameBoard) return;
     this.cards = [];
-
-    const cardSymbols = this.shuffle([...this.symbols, ...this.symbols]);
+    const slicedSymbols = this.symbols.slice(0, cardsNum);
+    this.tempSymbols = slicedSymbols;
+    const cardSymbols = this.shuffle([...slicedSymbols, ...slicedSymbols]);
     cardSymbols.forEach((symbol) => {
       const newCard = this.createCardElement(symbol);
       this.cards.push(newCard);
@@ -84,14 +102,14 @@ class MemoryGame {
   }
 
   restartGameHandler() {
-    this.startGame();
+    this.fourByFourButtonHandler();
     this.startGameMessage.style.display = "block";
     this.container.classList.remove("fully-bright-container");
     this.restartButton.style.display = "none";
   }
 
   playAgainHandler() {
-    this.startGame();
+    this.fourByFourButtonHandler();
     this.winPopupMessage.style.display = "none";
     this.startGameMessage.style.display = "block";
   }
@@ -130,7 +148,7 @@ class MemoryGame {
   displayRestartButton() {
     if (
       this.restartButton.style.display !== "block" &&
-      this.matchedPairs !== this.symbols.length
+      this.matchedPairs !== this.tempSymbols.length
     ) {
       this.restartButton.style.display = "block";
     }
@@ -148,7 +166,7 @@ class MemoryGame {
     this.firstCard.classList.add("matched");
     this.secondCard.classList.add("matched");
     this.matchedPairs += 1;
-    if (this.matchedPairs === 8) this.displayWinMessage();
+    if (this.matchedPairs === this.tempSymbols.length) this.displayWinMessage();
     this.resetFlippedCards();
   }
 
@@ -163,7 +181,7 @@ class MemoryGame {
   }
 
   displayWinMessage() {
-    if (this.matchedPairs === this.symbols.length) {
+    if (this.matchedPairs === this.tempSymbols.length) {
       setTimeout(() => {
         this.restartButton.style.display = "none";
         this.winPopupMessage.style.display = "block";
@@ -177,13 +195,48 @@ class MemoryGame {
     this.secondCard = null;
   }
 
-  startGame() {
+  startGame(cardsNum) {
     this.gameBoard.innerHTML = "";
     this.matchedPairs = 0;
     this.firstCard = null;
     this.secondCard = null;
     this.cards = [];
-    this.createBoard();
+    this.createBoard(cardsNum);
+  }
+
+  twoByThreeButtonHandler() {
+    const cardsNum = 3;
+    this.resetGameBoardClasses();
+    this.startGame(cardsNum);
+    this.gameBoard.classList.add("game-board");
+    this.gameBoard.classList.add("use-3-cols");
+    this.twoByThreeGridButton.classList.add("selectGridButton");
+    this.threeByFourGridButton.classList.remove("selectGridButton");
+    this.fourByFourGridButton.classList.remove("selectGridButton");
+  }
+
+  threeByFourButtonHandler() {
+    const cardsNum = 6;
+    this.resetGameBoardClasses();
+    this.startGame(cardsNum);
+    this.gameBoard.classList.add("game-board");
+    this.twoByThreeGridButton.classList.remove("selectGridButton");
+    this.threeByFourGridButton.classList.add("selectGridButton");
+    this.fourByFourGridButton.classList.remove("selectGridButton");
+  }
+
+  fourByFourButtonHandler() {
+    const defaultCardsNum = this.symbols.length;
+    this.resetGameBoardClasses();
+    this.startGame(defaultCardsNum);
+    this.gameBoard.classList.add("game-board");
+    this.twoByThreeGridButton.classList.remove("selectGridButton");
+    this.threeByFourGridButton.classList.remove("selectGridButton");
+    this.fourByFourGridButton.classList.add("selectGridButton");
+  }
+
+  resetGameBoardClasses() {
+    this.gameBoard.classList.remove("use-3-cols", "game-board");
   }
 }
 

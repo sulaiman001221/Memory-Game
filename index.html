@@ -16,7 +16,7 @@
   </head>
   <body>
     <div class="container">
-      <div id="game-board"></div>
+      <div class="game-board"></div>
       <button id="restart-button" hidden>Restart</button>
     </div>
     <div class="win-popup-message popup-box" hidden>
@@ -24,7 +24,12 @@
       <button id="play-again-button">Play Again</button>
     </div>
     <div class="start-game-message popup-box">
-      <p>Your role is to match 8 pairs</p>
+      <p>Choose Grid Size</p>
+      <div class="grid-options">
+        <div class="grid-size" id="grid-button-2x3">2x3</div>
+        <div class="grid-size" id="grid-button-3x4">3x4</div>
+        <div class="grid-size" id="grid-button-4x4">4x4</div>
+      </div>
       <button id="start-button">Start</button>
     </div>
     <script src="/dist/bundle.js"></script>
