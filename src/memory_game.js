@@ -3,6 +3,11 @@ class MemoryGame {
     this.symbols = ["🍎", "🍌", "🍇", "🍒", "🍍", "🍉", "🍓", "🍑"];
     this.tempSymbols = [];
     this.document = document;
+
+    this.startTime = null;
+    this.timerInterval = null;
+    this.timerDisplay = null;
+
     this.winPopupMessage = null;
     this.container = null;
     this.gameBoard = null;
@@ -34,6 +39,7 @@ class MemoryGame {
       this.document.querySelector("#grid-button-3x4");
     this.fourByFourGridButton = this.document.querySelector("#grid-button-4x4");
 
+    this.timerDisplay = this.document.querySelector("#timer");
     this.fourByFourButtonHandler();
     this.setupEventListeners();
   }
@@ -55,6 +61,23 @@ class MemoryGame {
     this.fourByFourGridButton.addEventListener("click", () =>
       this.fourByFourButtonHandler()
     );
+  }
+
+  startTimer() {
+    this.startTime = new Date().getTime();
+    this.timerInterval = setInterval(() => {
+      const elapsedTime = Math.floor(
+        (new Date().getTime() - this.startTime) / 1000
+      );
+      const minutes = String(Math.floor(elapsedTime / 60)).padStart(2, "0");
+      const seconds = String(elapsedTime % 60).padStart(2, "0");
+      this.timerDisplay.textContent = `${minutes}:${seconds}`;
+    }, 1000);
+  }
+
+  stopTimer() {
+    clearInterval(this.timerInterval);
+    this.timerInterval = null;
   }
 
   createBoard(cardsNum) {
@@ -99,9 +122,14 @@ class MemoryGame {
     this.enableCards();
     this.startGameMessage.style.display = "none";
     this.container.classList.add("fully-bright-container");
+
+    this.startTimer();
   }
 
   restartGameHandler() {
+    this.stopTimer();
+    this.timerDisplay.textContent = "00:00";
+
     this.fourByFourButtonHandler();
     this.startGameMessage.style.display = "block";
     this.container.classList.remove("fully-bright-container");
@@ -109,6 +137,9 @@ class MemoryGame {
   }
 
   playAgainHandler() {
+    this.stopTimer();
+    this.timerDisplay.textContent = "00:00";
+
     this.fourByFourButtonHandler();
     this.winPopupMessage.style.display = "none";
     this.startGameMessage.style.display = "block";
@@ -182,10 +213,19 @@ class MemoryGame {
 
   displayWinMessage() {
     if (this.matchedPairs === this.tempSymbols.length) {
+      this.stopTimer(); // Stop the timer when game is completed
+      const elapsedTime = Math.floor(
+        (new Date().getTime() - this.startTime) / 1000
+      );
+      const minutes = String(Math.floor(elapsedTime / 60)).padStart(2, "0");
+      const seconds = String(elapsedTime % 60).padStart(2, "0");
       setTimeout(() => {
         this.restartButton.style.display = "none";
         this.winPopupMessage.style.display = "block";
         this.container.classList.remove("fully-bright-container");
+        this.winPopupMessage.querySelector(
+          "p"
+        ).textContent = `You won!🥇 It took you ${minutes}:${seconds}`;
       }, 500);
     }
   }
