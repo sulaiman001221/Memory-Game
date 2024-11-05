@@ -5,10 +5,13 @@ describe("Memory Game", () => {
   let document,
     window,
     setup,
+    timerDisplay,
     gameBoard,
     winPopupMessage,
     container,
+    startButton,
     restartButton,
+    playAgainButton,
     startGameMessage,
     memoryGame,
     mockCards,
@@ -37,10 +40,13 @@ describe("Memory Game", () => {
     window = setup.window;
     memoryGame = new MemoryGame(document);
 
+    timerDisplay = document.querySelector("#timer");
     gameBoard = document.querySelector(".game-board");
     winPopupMessage = document.querySelector(".win-popup-message");
     container = document.querySelector(".container");
+    startButton = document.querySelector("#start-button");
     restartButton = document.querySelector("#restart-button");
+    playAgainButton = document.querySelector("#play-again-button");
     startGameMessage = document.querySelector(".start-game-message");
 
     mockCards = gameBoard.querySelectorAll(".card");
@@ -59,6 +65,46 @@ describe("Memory Game", () => {
   afterEach(() => {
     jasmine.clock().uninstall();
     restartButton.click();
+  });
+
+  describe("Timer", () => {
+    it("should start the timer when the game begins", () => {
+      startButton.click();
+      jasmine.clock().tick(1000); // Move clock forward by 1 second
+      expect(timerDisplay.textContent).toBe("00:01"); // Verify timer displays 1 second
+    });
+
+    it("should stop the timer when the game is completed", () => {
+      startButton.click();
+      jasmine.clock().tick(30000); // Simulate 30 seconds passing
+
+      // Simulate game win by matching all pairs
+      flipAllMatchingPairs()
+
+      expect(memoryGame.timerInterval).toBeNull(); 
+      expect(window.getComputedStyle(winPopupMessage).display).toBe("block");
+      expect(winPopupMessage.querySelector("#time").textContent).toBe("Time Taken: 00:00"); 
+    });
+
+    it("should reset the timer to 00:00 when the game is restarted", () => {
+      startButton.click();
+      jasmine.clock().tick(15000); 
+      restartButton.click(); 
+
+      expect(timerDisplay.textContent).toBe("00:00"); 
+    });
+
+    it("should reset the timer to 00:00 when play again is clicked after winning", () => {
+      startButton.click();
+      jasmine.clock().tick(20000); // Simulate 20 seconds passing
+
+      // Simulate game win by matching all pairs
+      flipAllMatchingPairs()
+
+      playAgainButton.click(); // Click play again after win
+      expect(timerDisplay.textContent).toBe("00:00"); // Timer should reset to 0
+      expect(winPopupMessage.style.display).toBe("none"); // Win message should be hidden
+    });
   });
 
   describe("Board Initialization", () => {
@@ -114,7 +160,6 @@ describe("Memory Game", () => {
   describe("Start Game Event", () => {
     it("should start the game and initially hide the restart button when the start button is clicked", () => {
       spyOn(memoryGame, "enableCards").and.callThrough();
-      const startButton = document.querySelector("#start-button");
       startButton.click();
       expect(startGameMessage.style.display).toBe("none");
       expect(container.classList.contains("fully-bright-container")).toBe(true);

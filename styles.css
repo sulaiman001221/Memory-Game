@@ -4,6 +4,7 @@ body {
 }
 
 .container {
+  position: relative;
   font-family: "Concert One", "Coda", san-serif, cursive;
   display: flex;
   flex-direction: column;
@@ -22,6 +23,16 @@ body {
 
 .fully-bright-container {
   filter: brightness(100%);
+}
+
+.timer {
+  position: absolute;
+  top: 20px;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: #333;
+  text-shadow: 1px 1px 0 #000, 1px 1px 0 #222;
 }
 
 .game-board {

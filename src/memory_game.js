@@ -38,8 +38,8 @@ class MemoryGame {
     this.threeByFourGridButton =
       this.document.querySelector("#grid-button-3x4");
     this.fourByFourGridButton = this.document.querySelector("#grid-button-4x4");
-
     this.timerDisplay = this.document.querySelector("#timer");
+    
     this.fourByFourButtonHandler();
     this.setupEventListeners();
   }
@@ -213,7 +213,7 @@ class MemoryGame {
 
   displayWinMessage() {
     if (this.matchedPairs === this.tempSymbols.length) {
-      this.stopTimer(); // Stop the timer when game is completed
+      this.stopTimer();
       const elapsedTime = Math.floor(
         (new Date().getTime() - this.startTime) / 1000
       );
@@ -224,8 +224,8 @@ class MemoryGame {
         this.winPopupMessage.style.display = "block";
         this.container.classList.remove("fully-bright-container");
         this.winPopupMessage.querySelector(
-          "p"
-        ).textContent = `You won!🥇 It took you ${minutes}:${seconds}`;
+          "#time"
+        ).textContent = `Time Taken: ${minutes}:${seconds}`;
       }, 500);
     }
   }
