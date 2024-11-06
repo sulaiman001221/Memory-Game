@@ -40,7 +40,7 @@ class MemoryGame {
       this.document.querySelector("#grid-button-3x4");
     this.fourByFourGridButton = this.document.querySelector("#grid-button-4x4");
     this.timerDisplay = this.document.querySelector("#timer");
-    this.flipCountDisplay = document.getElementById("flip-count");
+    this.flipCountDisplay = this.document.getElementById("flip-count");
 
     this.fourByFourButtonHandler();
     this.setupEventListeners();
@@ -241,6 +241,9 @@ class MemoryGame {
         this.winPopupMessage.querySelector(
           "#time"
         ).textContent = `Time Taken: ${minutes}:${seconds}`;
+        this.winPopupMessage.querySelector(
+          "#count"
+        ).textContent = `Flips Count: ${this.flipCount}`;
       }, 500);
     }
   }

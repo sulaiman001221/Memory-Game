@@ -38,7 +38,7 @@ html {
   text-shadow: 1px 1px 0 #000, 1px 1px 0 #222;
 }
 
-.timer{
+.timer {
   left: 100px;
 }
 
@@ -130,6 +130,10 @@ button:hover {
   padding: 22px 50px;
 }
 
+.win-popup-message button {
+  margin-top: 30px;
+}
+
 .popup-box p {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
@@ -183,6 +187,15 @@ button:hover {
   cursor: default;
 }
 
+#count,
+#time {
+  display: block;
+  text-align: left;
+  margin: 0 auto;
+  margin-bottom: 15px;
+  white-space: nowrap;
+}
+
 @media (max-width: 480px) {
   .card {
     width: 70px;
@@ -223,12 +236,13 @@ button:hover {
 
   .timer {
     top: 40px;
+    left: 33px;
     font-size: 22px;
   }
 
-  .flips {
+  .flip-count {
     top: 40px;
-    right: 50px;
+    right: 33px;
     font-size: 22px;
   }
 }
