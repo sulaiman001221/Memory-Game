@@ -69,33 +69,33 @@ describe("Memory Game", () => {
 
   describe("Timer", () => {
     it("should display the timer when the game begins", () => {
-      expect(timerDisplay.textContent).toBe("00:00"); 
+      expect(timerDisplay.textContent).toBe("00:00");
     });
 
     it("should stop the timer when the game is completed", () => {
       spyOn(memoryGame, "stopTimer").and.callFake(() => {
         clearInterval(memoryGame.timerInterval);
-        memoryGame.timerInterval = null; 
+        memoryGame.timerInterval = null;
       });
 
-      flipAllMatchingPairs(); 
+      flipAllMatchingPairs();
 
-      expect(memoryGame.stopTimer).toHaveBeenCalled(); 
-      expect(memoryGame.timerInterval).toBeNull(); 
-      expect(window.getComputedStyle(winPopupMessage).display).toBe("block"); 
+      expect(memoryGame.stopTimer).toHaveBeenCalled();
+      expect(memoryGame.timerInterval).toBeNull();
+      expect(window.getComputedStyle(winPopupMessage).display).toBe("block");
     });
-    
+
     it("should reset the timer to 00:00 when the game is restarted", () => {
-      timerDisplay.textContent = "00:30"
-      restartButton.click(); 
-      expect(timerDisplay.textContent).toBe("00:00"); 
+      timerDisplay.textContent = "00:30";
+      restartButton.click();
+      expect(timerDisplay.textContent).toBe("00:00");
     });
 
     it("should reset the timer to 00:00 when play again is clicked after winning", () => {
-      timerDisplay.textContent = "00:30"
-      flipAllMatchingPairs()
+      timerDisplay.textContent = "00:30";
+      flipAllMatchingPairs();
       playAgainButton.click();
-      expect(timerDisplay.textContent).toBe("00:00"); 
+      expect(timerDisplay.textContent).toBe("00:00");
       expect(winPopupMessage.style.display).toBe("none");
     });
   });
@@ -236,6 +236,15 @@ describe("Memory Game", () => {
       matchCard1.click();
       expect(matchCard1.classList.contains("hidden")).toBe(false);
     });
+
+    // it("should keep track of number of flips", () => {
+    //   const card1 = mockCards[1];
+    //   const card2 = mockCards[2];
+    //   card1.click();
+    //   card2.click();
+
+    //   expect(memoryGame.flipCount).toBe(2);
+    // });
   });
 
   describe("Restart Game Event", () => {

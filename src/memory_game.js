@@ -84,12 +84,12 @@ class MemoryGame {
 
   incrementFlipCount() {
     this.flipCount += 1;
-    this.flipCountDisplay.textContent = flipCount;
+    this.flipCountDisplay.textContent = this.flipCount;
   }
 
   resetFlipCount() {
-    flipCount = 0;
-    this.flipCountDisplay.textContent = flipCount;
+    this.flipCount = 0;
+    this.flipCountDisplay.textContent = this.flipCount;
   }
 
   createBoard(cardsNum) {
@@ -140,7 +140,7 @@ class MemoryGame {
   }
 
   restartGameHandler() {
-    this.resetFlipCount;
+    this.resetFlipCount();
     this.stopTimer();
     this.timerDisplay.textContent = "00:00";
 
