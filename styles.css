@@ -27,8 +27,8 @@ html {
 .fully-bright-container {
   filter: brightness(100%);
 }
-
-.timer {
+.timer,
+.flip-count {
   position: absolute;
   top: 20px;
   font-family: "Poppins", sans-serif;
@@ -36,6 +36,14 @@ html {
   font-size: 18px;
   color: #333;
   text-shadow: 1px 1px 0 #000, 1px 1px 0 #222;
+}
+
+.timer{
+  left: 100px;
+}
+
+.flip-count {
+  right: 100px;
 }
 
 .game-board {
@@ -215,6 +223,12 @@ button:hover {
 
   .timer {
     top: 40px;
+    font-size: 22px;
+  }
+
+  .flips {
+    top: 40px;
+    right: 50px;
     font-size: 22px;
   }
 }
