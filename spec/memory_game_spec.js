@@ -5,6 +5,7 @@ describe("Memory Game", () => {
   let document,
     window,
     setup,
+    gameBoard,
     winPopupMessage,
     container,
     restartButton,
@@ -35,20 +36,22 @@ describe("Memory Game", () => {
     document = setup.document;
     window = setup.window;
     memoryGame = new MemoryGame(document);
-    const gameBoard = setup.gameBoard;
-    winPopupMessage = setup.winPopupMessage;
-    container = setup.container;
-    restartButton = setup.restartButton;
-    startGameMessage = setup.startGameMessage;
+
+    gameBoard = document.querySelector(".game-board");
+    winPopupMessage = document.querySelector(".win-popup-message");
+    container = document.querySelector(".container");
+    restartButton = document.querySelector("#restart-button");
+    startGameMessage = document.querySelector(".start-game-message");
 
     mockCards = gameBoard.querySelectorAll(".card");
     mockCard = mockCards[0];
-    mockCardsArray = Array.from(gameBoard.querySelectorAll(".card"));
+    mockCardsArray = Array.from(mockCards);
     matchCard1 = mockCardsArray[0];
     matchCard2 = mockCardsArray.find(
       (card) =>
         card.dataset.symbol === matchCard1.dataset.symbol && card !== matchCard1
     );
+
     jasmine.clock().install();
     memoryGame.startGame();
   });
@@ -87,12 +90,31 @@ describe("Memory Game", () => {
         expect(card.classList.contains("disabled")).toBeTrue();
       });
     });
+
+    it("should create the board according to the selected grid size", () => {
+      spyOn(memoryGame, "startGame").and.callThrough();
+
+      document.querySelector("#grid-button-2x3").click();
+      expect(memoryGame.startGame).toHaveBeenCalledWith(3);
+      expect(gameBoard.querySelectorAll(".card").length).toBe(6);
+      expect(gameBoard.classList.contains("use-3-cols")).toBe(true);
+
+      document.querySelector("#grid-button-3x4").click();
+      expect(memoryGame.startGame).toHaveBeenCalledWith(6);
+      expect(gameBoard.querySelectorAll(".card").length).toBe(12);
+      expect(gameBoard.classList.contains("use-3-cols")).toBe(false);
+
+      document.querySelector("#grid-button-4x4").click();
+      expect(memoryGame.startGame).toHaveBeenCalledWith(8);
+      expect(gameBoard.querySelectorAll(".card").length).toBe(16);
+      expect(gameBoard.classList.contains("use-3-cols")).toBe(false);
+    });
   });
 
   describe("Start Game Event", () => {
     it("should start the game and initially hide the restart button when the start button is clicked", () => {
       spyOn(memoryGame, "enableCards").and.callThrough();
-      const startButton = setup.startButton;
+      const startButton = document.querySelector("#start-button");
       startButton.click();
       expect(startGameMessage.style.display).toBe("none");
       expect(container.classList.contains("fully-bright-container")).toBe(true);
