@@ -212,9 +212,4 @@ button:hover {
     padding: 20px 45px;
     white-space: nowrap;
   }
-
-  .timer {
-    top: 40px;
-    font-size: 22px;
-  }
 }
