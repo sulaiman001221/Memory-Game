@@ -233,16 +233,4 @@ button:hover {
     padding: 20px 45px;
     white-space: nowrap;
   }
-
-  .timer {
-    top: 40px;
-    left: 33px;
-    font-size: 22px;
-  }
-
-  .flip-count {
-    top: 40px;
-    right: 33px;
-    font-size: 22px;
-  }
 }
