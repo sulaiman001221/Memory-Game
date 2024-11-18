@@ -27,8 +27,8 @@ html {
 .fully-bright-container {
   filter: brightness(100%);
 }
-
-.timer {
+.timer,
+.flip-count {
   position: absolute;
   top: 20px;
   font-family: "Poppins", sans-serif;
@@ -36,6 +36,14 @@ html {
   font-size: 18px;
   color: #333;
   text-shadow: 1px 1px 0 #000, 1px 1px 0 #222;
+}
+
+.timer {
+  left: 100px;
+}
+
+.flip-count {
+  right: 100px;
 }
 
 .game-board {
@@ -122,6 +130,10 @@ button:hover {
   padding: 22px 50px;
 }
 
+.win-popup-message button {
+  margin-top: 30px;
+}
+
 .popup-box p {
   font-family: "Poppins", sans-serif;
   font-weight: 600;
@@ -173,6 +185,15 @@ button:hover {
   transform: none;
   pointer-events: none;
   cursor: default;
+}
+
+#count,
+#time {
+  display: block;
+  text-align: left;
+  margin: 0 auto;
+  margin-bottom: 15px;
+  white-space: nowrap;
 }
 
 @media (max-width: 480px) {

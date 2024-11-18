@@ -22,6 +22,7 @@ class MemoryGame {
     this.firstCard = null;
     this.secondCard = null;
     this.matchedPairs = 0;
+    this.flipCount = 0;
 
     this.setupDom();
   }
@@ -39,7 +40,8 @@ class MemoryGame {
       this.document.querySelector("#grid-button-3x4");
     this.fourByFourGridButton = this.document.querySelector("#grid-button-4x4");
     this.timerDisplay = this.document.querySelector("#timer");
-    
+    this.flipCountDisplay = this.document.getElementById("flip-count");
+
     this.fourByFourButtonHandler();
     this.setupEventListeners();
   }
@@ -80,6 +82,16 @@ class MemoryGame {
     this.timerInterval = null;
   }
 
+  incrementFlipCount() {
+    this.flipCount += 1;
+    this.flipCountDisplay.textContent = this.flipCount;
+  }
+
+  resetFlipCount() {
+    this.flipCount = 0;
+    this.flipCountDisplay.textContent = this.flipCount;
+  }
+
   createBoard(cardsNum) {
     if (!this.gameBoard) return;
     this.cards = [];
@@ -107,6 +119,7 @@ class MemoryGame {
     if (this.isCardClickable(card)) {
       this.flipCard(card);
       this.displayRestartButton();
+      this.incrementFlipCount();
     }
   }
 
@@ -127,6 +140,7 @@ class MemoryGame {
   }
 
   restartGameHandler() {
+    this.resetFlipCount();
     this.stopTimer();
     this.timerDisplay.textContent = "00:00";
 
@@ -137,6 +151,7 @@ class MemoryGame {
   }
 
   playAgainHandler() {
+    this.resetFlipCount();
     this.stopTimer();
     this.timerDisplay.textContent = "00:00";
 
@@ -226,6 +241,9 @@ class MemoryGame {
         this.winPopupMessage.querySelector(
           "#time"
         ).textContent = `Time Taken: ${minutes}:${seconds}`;
+        this.winPopupMessage.querySelector(
+          "#count"
+        ).textContent = `Flips Count: ${this.flipCount}`;
       }, 500);
     }
   }

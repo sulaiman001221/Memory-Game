@@ -18,7 +18,8 @@ describe("Memory Game", () => {
     mockCard,
     matchCard1,
     matchCard2,
-    mockCardsArray;
+    mockCardsArray,
+    flipCountDisplay;
 
   const flipAllMatchingPairs = () => {
     mockCardsArray.forEach((card) => {
@@ -48,6 +49,7 @@ describe("Memory Game", () => {
     restartButton = document.querySelector("#restart-button");
     playAgainButton = document.querySelector("#play-again-button");
     startGameMessage = document.querySelector(".start-game-message");
+    flipCountDisplay = document.getElementById("flip-count");
 
     mockCards = gameBoard.querySelectorAll(".card");
     mockCard = mockCards[0];
@@ -69,34 +71,88 @@ describe("Memory Game", () => {
 
   describe("Timer", () => {
     it("should display the timer when the game begins", () => {
-      expect(timerDisplay.textContent).toBe("00:00"); 
+      expect(timerDisplay.textContent).toBe("00:00");
     });
 
     it("should stop the timer when the game is completed", () => {
       spyOn(memoryGame, "stopTimer").and.callFake(() => {
         clearInterval(memoryGame.timerInterval);
-        memoryGame.timerInterval = null; 
+        memoryGame.timerInterval = null;
       });
 
-      flipAllMatchingPairs(); 
+      flipAllMatchingPairs();
 
-      expect(memoryGame.stopTimer).toHaveBeenCalled(); 
-      expect(memoryGame.timerInterval).toBeNull(); 
-      expect(window.getComputedStyle(winPopupMessage).display).toBe("block"); 
+      expect(memoryGame.stopTimer).toHaveBeenCalled();
+      expect(memoryGame.timerInterval).toBeNull();
+      expect(window.getComputedStyle(winPopupMessage).display).toBe("block");
     });
-    
+
     it("should reset the timer to 00:00 when the game is restarted", () => {
-      timerDisplay.textContent = "00:30"
-      restartButton.click(); 
-      expect(timerDisplay.textContent).toBe("00:00"); 
+      timerDisplay.textContent = "00:30";
+      restartButton.click();
+      expect(timerDisplay.textContent).toBe("00:00");
     });
 
     it("should reset the timer to 00:00 when play again is clicked after winning", () => {
-      timerDisplay.textContent = "00:30"
-      flipAllMatchingPairs()
+      timerDisplay.textContent = "00:30";
+      flipAllMatchingPairs();
       playAgainButton.click();
-      expect(timerDisplay.textContent).toBe("00:00"); 
+      expect(timerDisplay.textContent).toBe("00:00");
       expect(winPopupMessage.style.display).toBe("none");
+    });
+  });
+
+  describe("Flip Count", () => {
+    it("should increment the flip count each time a card is flipped", () => {
+      expect(memoryGame.flipCount).toBe(0);
+      expect(flipCountDisplay.textContent).toBe("0");
+
+      mockCards[0].click();
+      expect(memoryGame.flipCount).toBe(1);
+      expect(flipCountDisplay.textContent).toBe("1");
+
+      mockCards[1].click();
+      expect(memoryGame.flipCount).toBe(2);
+      expect(flipCountDisplay.textContent).toBe("2");
+    });
+
+    it("should reset the flip count when the game is restarted", () => {
+      mockCards[0].click();
+      mockCards[1].click();
+      expect(memoryGame.flipCount).toBe(2);
+
+      memoryGame.restartGameHandler();
+
+      expect(memoryGame.flipCount).toBe(0);
+      expect(flipCountDisplay.textContent).toBe("0");
+    });
+
+    it("should reset the flip count on win when play again is clicked", () => {
+      flipCountDisplay.textContent = "10";
+      flipAllMatchingPairs();
+      playAgainButton.click();
+      expect(flipCountDisplay.textContent).toBe("0");
+    });
+  });
+
+  describe("Grid Configuration", () => {
+    it("should create the board according to the selected grid size", () => {
+      spyOn(memoryGame, "startGame").and.callThrough();
+
+      document.querySelector("#grid-button-2x3").click();
+      expect(memoryGame.startGame).toHaveBeenCalledWith(3);
+      expect(gameBoard.querySelectorAll(".card").length).toBe(6);
+      expect(gameBoard.classList.contains("use-3-cols")).toBe(true);
+
+      document.querySelector("#grid-button-3x4").click();
+      expect(memoryGame.startGame).toHaveBeenCalledWith(6);
+      expect(gameBoard.querySelectorAll(".card").length).toBe(12);
+      expect(gameBoard.classList.contains("use-3-cols")).toBe(false);
+
+      document.querySelector("#grid-button-4x4").click();
+      expect(memoryGame.startGame).toHaveBeenCalledWith(8);
+      expect(gameBoard.querySelectorAll(".card").length).toBe(16);
+      expect(gameBoard.classList.contains("use-3-cols")).toBe(false);
     });
   });
 
@@ -128,25 +184,6 @@ describe("Memory Game", () => {
       mockCards.forEach((card) => {
         expect(card.classList.contains("disabled")).toBeTrue();
       });
-    });
-
-    it("should create the board according to the selected grid size", () => {
-      spyOn(memoryGame, "startGame").and.callThrough();
-
-      document.querySelector("#grid-button-2x3").click();
-      expect(memoryGame.startGame).toHaveBeenCalledWith(3);
-      expect(gameBoard.querySelectorAll(".card").length).toBe(6);
-      expect(gameBoard.classList.contains("use-3-cols")).toBe(true);
-
-      document.querySelector("#grid-button-3x4").click();
-      expect(memoryGame.startGame).toHaveBeenCalledWith(6);
-      expect(gameBoard.querySelectorAll(".card").length).toBe(12);
-      expect(gameBoard.classList.contains("use-3-cols")).toBe(false);
-
-      document.querySelector("#grid-button-4x4").click();
-      expect(memoryGame.startGame).toHaveBeenCalledWith(8);
-      expect(gameBoard.querySelectorAll(".card").length).toBe(16);
-      expect(gameBoard.classList.contains("use-3-cols")).toBe(false);
     });
   });
 
