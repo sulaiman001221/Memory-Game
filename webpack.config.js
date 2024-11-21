@@ -1,11 +1,13 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/memory_game.js",
+  entry: "./src/memory_game.js", 
   output: {
-    path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
+    path: path.resolve(__dirname, "dist"), 
+    publicPath: "./", 
   },
+  mode: "production", 
   module: {
     rules: [
       {
@@ -14,11 +16,10 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-env"],
+            presets: ["@babel/preset-env"], 
           },
         },
       },
     ],
   },
-  mode: "development",
 };
