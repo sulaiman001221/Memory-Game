@@ -7,7 +7,7 @@
     "test": "jasmine",
     "build": "webpack --config webpack.config.js",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist --add"
   },
   "homepage": "https://sulaiman001221.github.io/Memory-Game/",
   "keywords": [],
