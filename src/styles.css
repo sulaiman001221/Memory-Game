@@ -225,9 +225,12 @@ button:hover {
   }
 
   .popup-box {
-    font-size: 22px;
     padding: 20px 16px;
     white-space: nowrap;
+  }
+
+  .popup-box p {
+    font-size: 22px;
   }
 
   .win-popup-message {
@@ -239,7 +242,7 @@ button:hover {
     left: 35px;
     font-size: 23px;
   }
-  
+
   .flip-count {
     right: 35px;
     font-size: 23px;
