@@ -1,12 +1,17 @@
-const { JSDOM } = require("jsdom");
-const fs = require("fs");
-const path = require("path");
+import { JSDOM } from "jsdom";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-function setupDom() {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const setupDom = () => {
   const html = fs.readFileSync(
     path.join(__dirname, "../../index.html"),
     "utf8"
   );
+  
   const dom = new JSDOM(html);
   const window = dom.window;
   const document = dom.window.document;
@@ -30,4 +35,4 @@ function setupDom() {
   };
 }
 
-module.exports = { setupDom };
+export default setupDom;

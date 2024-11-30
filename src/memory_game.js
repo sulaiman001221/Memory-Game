@@ -304,4 +304,4 @@ if (typeof document !== "undefined") {
   });
 }
 
-module.exports = MemoryGame;
+export default MemoryGame;

@@ -1,5 +1,6 @@
-const MemoryGame = require("../src/memory_game");
-const { setupDom } = require("./helpers/dom_setup");
+import MemoryGame from "../src/memory_game.js";
+import setupDom  from "./configs/dom_setup.js";
+
 
 describe("Memory Game", () => {
   let document,
