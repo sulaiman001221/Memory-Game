@@ -219,9 +219,9 @@ button:hover {
   }
 
   button {
-    width: 120px;
-    font-size: 20px;
-    padding: 8px;
+    width: 150px;
+    font-size: 22px;
+    padding: 10px;
   }
 
   .popup-box {
