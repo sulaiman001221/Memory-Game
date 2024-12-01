@@ -240,10 +240,10 @@ class MemoryGame {
         this.container.classList.remove("fully-bright-container");
         this.winPopupMessage.querySelector(
           "#time"
-        ).textContent = `Time Taken: ${minutes}:${seconds}`;
+        ).innerHTML =  `Time Taken: <span class="highlight">${minutes}:${seconds}</span>`;
         this.winPopupMessage.querySelector(
           "#count"
-        ).textContent = `Flips Count: ${this.flipCount}`;
+        ).innerHTML = `Flips Count: <span class="highlight">${this.flipCount}</span>`;
       }, 500);
     }
   }
